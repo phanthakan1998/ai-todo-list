@@ -18,25 +18,31 @@ body {
   color: var(--text);
   font-family: system-ui, sans-serif;
   min-height: 100vh;
+  /* prevent horizontal scroll on mobile */
+  overflow-x: hidden;
 }
 
 .app {
   max-width: 640px;
   margin: 0 auto;
-  padding: 0 16px 48px;
+  padding: 0 16px 64px;
 }
 
-/* Header */
+/* ── Header ─────────────────────────────────── */
 .app-header {
   background: linear-gradient(135deg, var(--surface2), var(--accent));
   text-align: center;
-  padding: 32px 16px;
+  padding: 28px 16px;
   border-radius: 0 0 var(--radius) var(--radius);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
-.app-header h1 { font-size: 2rem; color: #fff; letter-spacing: .05em; }
+.app-header h1 {
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  color: #fff;
+  letter-spacing: .05em;
+}
 
-/* Tabs */
+/* ── Tabs ────────────────────────────────────── */
 .tab-bar {
   display: flex;
   gap: 8px;
@@ -44,69 +50,115 @@ body {
 }
 .tab {
   flex: 1;
-  padding: 10px;
+  padding: 12px 8px;
   border: none;
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: clamp(.9rem, 3vw, 1rem);
   cursor: pointer;
   transition: background .2s, color .2s;
+  /* large enough tap target on mobile */
+  min-height: 44px;
+  touch-action: manipulation;
 }
 .tab.active { background: var(--accent); color: #fff; }
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Add form */
+/* ── Add form ────────────────────────────────── */
 .add-todo-form {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "text   btn"
+    "dlabel ddate";
   gap: 8px;
-  flex-wrap: wrap;
   margin-bottom: 16px;
   align-items: center;
 }
+
 .add-todo-form input[type="text"] {
-  flex: 1;
-  min-width: 160px;
-  padding: 10px 12px;
+  grid-area: text;
+  width: 100%;
+  padding: 12px;
   border: 1px solid var(--surface2);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
   font-size: 1rem;
 }
-.add-todo-form label { color: var(--text-muted); font-size: .85rem; }
-.add-todo-form input[type="date"] {
-  padding: 8px;
-  border: 1px solid var(--surface2);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--text);
-  font-size: .9rem;
-}
+.add-todo-form input[type="text"]::placeholder { color: var(--text-muted); }
+
 .add-todo-form button {
-  padding: 10px 20px;
+  grid-area: btn;
+  padding: 12px 20px;
   background: var(--accent);
   color: #fff;
   border: none;
   border-radius: var(--radius);
   font-size: 1rem;
   cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  touch-action: manipulation;
   transition: opacity .2s;
 }
 .add-todo-form button:hover { opacity: .85; }
+.add-todo-form button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Stats */
+.add-todo-form label {
+  grid-area: dlabel;
+  color: var(--text-muted);
+  font-size: .85rem;
+  align-self: center;
+}
+
+.add-todo-form input[type="date"] {
+  grid-area: ddate;
+  padding: 10px;
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: .9rem;
+  width: 100%;
+  min-height: 44px;
+  /* fix iOS date picker color */
+  color-scheme: dark;
+}
+
+/* on very small screens, stack everything in one column */
+@media (max-width: 360px) {
+  .add-todo-form {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "text"
+      "dlabel"
+      "ddate"
+      "btn";
+  }
+  .add-todo-form button { width: 100%; }
+}
+
+/* ── Stats ───────────────────────────────────── */
 .stats-section { margin-bottom: 16px; }
 .stats-bar {
   display: flex;
-  gap: 16px;
-  font-size: .85rem;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  font-size: clamp(.78rem, 2.5vw, .85rem);
   color: var(--text-muted);
 }
 .stat strong { color: var(--text); }
 .stat.overdue strong { color: var(--red); }
 
-/* Todo list */
-.todo-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+/* ── Todo list ───────────────────────────────── */
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .todo-item {
   display: flex;
@@ -116,45 +168,58 @@ body {
   padding: 12px 14px;
   border-radius: var(--radius);
   transition: opacity .2s;
+  /* wrap deadline tag below text on very small screens */
+  flex-wrap: wrap;
 }
 .todo-item.completed { opacity: .6; }
 
 .todo-item input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--accent);
   cursor: pointer;
   flex-shrink: 0;
+  /* bigger tap target */
+  touch-action: manipulation;
 }
 
-.todo-text { flex: 1; font-size: 1rem; }
+.todo-text {
+  flex: 1;
+  font-size: clamp(.9rem, 3vw, 1rem);
+  word-break: break-word;
+  min-width: 0;
+}
 .todo-text.done { text-decoration: line-through; color: var(--text-muted); }
 
-.todo-item button {
+.todo-item > button {
   background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 4px;
   font-size: .8rem;
+  min-height: 36px;
+  touch-action: manipulation;
   transition: color .2s, background .2s;
+  flex-shrink: 0;
 }
-.todo-item button:hover { color: var(--red); background: rgba(239,83,80,.1); }
+.todo-item > button:hover { color: var(--red); background: rgba(239,83,80,.1); }
 
-/* Deadline tag */
+/* ── Deadline tag ────────────────────────────── */
 .deadline-tag {
-  font-size: .75rem;
-  padding: 2px 8px;
+  font-size: .72rem;
+  padding: 3px 9px;
   border-radius: 12px;
   font-weight: 600;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.deadline-tag.ok { background: rgba(76,175,80,.15); color: var(--green); }
-.deadline-tag.soon { background: rgba(255,179,0,.15); color: var(--yellow); }
-.deadline-tag.overdue { background: rgba(239,83,80,.15); color: var(--red); }
+.deadline-tag.ok      { background: rgba(76,175,80,.15);  color: var(--green);  }
+.deadline-tag.soon    { background: rgba(255,179,0,.15);  color: var(--yellow); }
+.deadline-tag.overdue { background: rgba(239,83,80,.15);  color: var(--red);    }
 
-/* Empty state */
+/* ── Empty state ─────────────────────────────── */
 .empty-state {
   text-align: center;
   color: var(--text-muted);
