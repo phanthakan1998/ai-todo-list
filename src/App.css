@@ -1,0 +1,163 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #1a1a2e;
+  --surface: #16213e;
+  --surface2: #0f3460;
+  --accent: #e94560;
+  --text: #e0e0e0;
+  --text-muted: #9e9e9e;
+  --green: #4caf50;
+  --yellow: #ffb300;
+  --red: #ef5350;
+  --radius: 8px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, var(--surface2), var(--accent));
+  text-align: center;
+  padding: 32px 16px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  margin-bottom: 24px;
+}
+.app-header h1 { font-size: 2rem; color: #fff; letter-spacing: .05em; }
+
+/* Tabs */
+.tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.tab.active { background: var(--accent); color: #fff; }
+
+/* Add form */
+.add-todo-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: center;
+}
+.add-todo-form input[type="text"] {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px 12px;
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+}
+.add-todo-form label { color: var(--text-muted); font-size: .85rem; }
+.add-todo-form input[type="date"] {
+  padding: 8px;
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: .9rem;
+}
+.add-todo-form button {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity .2s;
+}
+.add-todo-form button:hover { opacity: .85; }
+
+/* Stats */
+.stats-section { margin-bottom: 16px; }
+.stats-bar {
+  display: flex;
+  gap: 16px;
+  font-size: .85rem;
+  color: var(--text-muted);
+}
+.stat strong { color: var(--text); }
+.stat.overdue strong { color: var(--red); }
+
+/* Todo list */
+.todo-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  transition: opacity .2s;
+}
+.todo-item.completed { opacity: .6; }
+
+.todo-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo-text { flex: 1; font-size: 1rem; }
+.todo-text.done { text-decoration: line-through; color: var(--text-muted); }
+
+.todo-item button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: .8rem;
+  transition: color .2s, background .2s;
+}
+.todo-item button:hover { color: var(--red); background: rgba(239,83,80,.1); }
+
+/* Deadline tag */
+.deadline-tag {
+  font-size: .75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.deadline-tag.ok { background: rgba(76,175,80,.15); color: var(--green); }
+.deadline-tag.soon { background: rgba(255,179,0,.15); color: var(--yellow); }
+.deadline-tag.overdue { background: rgba(239,83,80,.15); color: var(--red); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 40px 0;
+  font-size: 1rem;
+}
